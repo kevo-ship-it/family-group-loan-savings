@@ -139,7 +139,7 @@
   <script>
     // Initialize Supabase client with your credentials
     const supabaseUrl = 'https://idwqayipyhsvdxmtalli.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlkd3FheWlweWhzdmR4bXRhbGxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY5NDIyMDgsImV4cCI6MjA2MjUxODIwOH0.zA-xAQK71EV843i1uGhA2MM2ooxrIG2F_qM5xT-iuYI';
+    const supabaseKey = 'your_supabase_key_here'; // DO NOT expose your Supabase key in the frontend
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
     
     // Form toggle functions
@@ -181,7 +181,7 @@
         alert.style.display = 'none';
       }, 5000);
     }
-    
+
     // Sign In form submission
     document.getElementById('signin-form').addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -207,7 +207,7 @@
         showAlert(error.message, 'danger');
       }
     });
-    
+
     // Sign Up form submission
     document.getElementById('signup-form').addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -219,7 +219,7 @@
       const idNumber = document.getElementById('id-number').value;
       
       try {
-        // Sign up with Supabase
+        // Sign up with Supabase and save additional data in user_metadata
         const { data, error } = await supabase.auth.signUp({
           email: email,
           password: password,
@@ -234,21 +234,8 @@
         
         if (error) throw error;
         
-        // Update profile data
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .update({
-            full_name: fullName,
-            phone_number: phoneNumber,
-            id_number: idNumber
-          })
-          .eq('id', data.user.id);
-        
-        if (profileError) throw profileError;
-        
         showAlert('Registration successful! Please check your email for verification instructions.', 'success');
         
-        // Switch back to login form after 3 seconds
         setTimeout(() => {
           document.getElementById('register-form').style.display = 'none';
           document.getElementById('login-form').style.display = 'block';
@@ -258,7 +245,7 @@
         showAlert(error.message, 'danger');
       }
     });
-    
+
     // Password reset form submission
     document.getElementById('password-reset-form').addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -274,7 +261,6 @@
         
         showAlert('Password reset instructions sent to your email.', 'success');
         
-        // Switch back to login form after 3 seconds
         setTimeout(() => {
           document.getElementById('reset-form').style.display = 'none';
           document.getElementById('login-form').style.display = 'block';
@@ -292,7 +278,4 @@
       if (session) {
         window.location.href = 'dashboard.html';
       }
-    });
-  </script>
-</body>
-            </html>
+   
